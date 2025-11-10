@@ -70,11 +70,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 radioCube.isChecked -> {
-                    var i = 0
-                    while (i * i * i < n) {
-                        resultList.add(i * i * i)
-                        i++
-                    }
+					var i = 1
+					while (i < n) {
+						if (isPerfect(i)) resultList.add(i)
+						i++
+					}
                 }
                 radioFibo.isChecked -> {
                     var a = 0
@@ -111,28 +111,34 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        radioGroupTop.setOnCheckedChangeListener { _, checkedId ->
+        // Tạo listener cho hàng nút trên
+        var topListener: RadioGroup.OnCheckedChangeListener? = null
+        var moreListener: RadioGroup.OnCheckedChangeListener? = null
+        
+        topListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
             if (checkedId != -1) {
+                // Clear hàng nút dưới khi chọn hàng nút trên
                 radioGroupMore.setOnCheckedChangeListener(null)
                 radioGroupMore.clearCheck()
-                radioGroupMore.setOnCheckedChangeListener { _, _ ->
-                    // reattach after clear
-                    radioGroupTop.check(checkedId)
-                }
+                radioGroupMore.setOnCheckedChangeListener(moreListener)
+                updateList()
             }
-            updateList()
         }
-        radioGroupMore.setOnCheckedChangeListener { _, checkedId ->
+        
+        // Tạo listener cho hàng nút dưới
+        moreListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
             if (checkedId != -1) {
+                // Clear hàng nút trên khi chọn hàng nút dưới
                 radioGroupTop.setOnCheckedChangeListener(null)
                 radioGroupTop.clearCheck()
-                radioGroupTop.setOnCheckedChangeListener { _, _ ->
-                    // reattach after clear
-                    radioGroupMore.check(checkedId)
-                }
+                radioGroupTop.setOnCheckedChangeListener(topListener)
+                updateList()
             }
-            updateList()
         }
+        
+        // Gắn listener ban đầu
+        radioGroupTop.setOnCheckedChangeListener(topListener)
+        radioGroupMore.setOnCheckedChangeListener(moreListener)
 
         // Khởi tạo cập nhật lần đầu
         updateList()
@@ -149,4 +155,21 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
+
+	private fun isPerfect(x: Int): Boolean {
+		if (x < 2) return false
+		var sum = 1
+		var i = 2
+		while (i * i <= x) {
+			if (x % i == 0) {
+				sum += i
+				val other = x / i
+				if (other != i) {
+					sum += other
+				}
+			}
+			i++
+		}
+		return sum == x
+	}
 }
