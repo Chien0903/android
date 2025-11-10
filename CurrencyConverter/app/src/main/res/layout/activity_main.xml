@@ -14,34 +14,27 @@
         android:padding="16dp">
 
         <EditText
-            android:id="@+id/amountInput"
+            android:id="@+id/amountFrom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter input" />
+            android:hint="Amount from" />
 
         <Spinner
             android:id="@+id/currencyFrom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <EditText
+            android:id="@+id/amountTo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Amount to" />
+
         <Spinner
             android:id="@+id/currencyTo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/convertButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Convert"/>
-
-        <TextView
-            android:id="@+id/result"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:paddingTop="16dp"
-            />
     </LinearLayout>
 
 

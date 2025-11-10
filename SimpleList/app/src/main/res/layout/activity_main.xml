@@ -17,6 +17,7 @@
         android:padding="12dp"/>
 
     <RadioGroup
+        android:id="@+id/radioGroupTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -43,11 +44,33 @@
             android:text="So chinh phuong" />
     </RadioGroup>
 
-    <Button
-        android:id="@+id/buttonShow"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/radioGroupMore"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show"/>
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioPrime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="So nguyen to" />
+
+        <RadioButton
+            android:id="@+id/radioCube"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="So lap phuong" />
+
+        <RadioButton
+            android:id="@+id/radioFibo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="So Fibonacci" />
+    </RadioGroup>
 
     <ListView
         android:id="@+id/listViewResult"
