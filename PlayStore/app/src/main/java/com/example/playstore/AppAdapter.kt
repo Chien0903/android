@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class AppAdapter(
     private val apps: List<App>,
-    private val isHorizontal: Boolean
+    private val isHorizontal: Boolean,
+    private val showFullInfo: Boolean = false
 ) : RecyclerView.Adapter<AppAdapter.AppViewHolder>() {
 
     inner class AppViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -21,10 +22,10 @@ class AppAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
-        val layoutId = if (isHorizontal) {
-            R.layout.item_app_horizontal
-        } else {
-            R.layout.item_app_vertical
+        val layoutId = when {
+            isHorizontal && showFullInfo -> R.layout.item_app_horizontal_full
+            isHorizontal -> R.layout.item_app_horizontal
+            else -> R.layout.item_app_vertical
         }
         val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
         return AppViewHolder(view)
@@ -35,10 +36,8 @@ class AppAdapter(
         holder.appIcon.setImageResource(app.iconResId)
         holder.appName.text = app.name
         
-        if (isHorizontal) {
-            // Horizontal layout chỉ hiển thị tên
-        } else {
-            // Vertical layout hiển thị đầy đủ thông tin
+        // Hiển thị đầy đủ thông tin nếu là vertical hoặc horizontal với full info
+        if (!isHorizontal || showFullInfo) {
             holder.appGenre?.text = app.genre
             holder.appRating?.text = app.rating.toString()
             holder.appSize?.text = app.size

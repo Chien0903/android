@@ -23,11 +23,11 @@ class MainActivity : AppCompatActivity() {
     
     private fun createSampleData(): List<AppSection> {
         return listOf(
-            // Section "Suggested for you" (Sponsored) - Vertical layout
+            // Section "Suggested for you" (Sponsored) - Horizontal layout với đầy đủ thông tin
             AppSection(
                 title = "Suggested for you",
                 isSponsored = true,
-                isHorizontal = false,
+                isHorizontal = true,
                 apps = listOf(
                     App(
                         name = "Mech Assemble: Zombie Swarm",

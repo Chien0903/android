@@ -40,27 +40,22 @@ class AppSectionAdapter(
             holder.sectionArrowIcon.visibility = View.VISIBLE
         }
         
-        // Setup RecyclerView cho apps - tạo layout manager mới mỗi lần
+        // Setup RecyclerView cho apps - tạo layout manager với orientation phù hợp
         val layoutManager = if (section.isHorizontal) {
             LinearLayoutManager(holder.itemView.context, LinearLayoutManager.HORIZONTAL, false)
         } else {
             LinearLayoutManager(holder.itemView.context, LinearLayoutManager.VERTICAL, false)
         }
-        
-        // Đặt lại layout manager và adapter
         holder.recyclerViewApps.layoutManager = layoutManager
+        
         holder.recyclerViewApps.setHasFixedSize(false)
         holder.recyclerViewApps.isNestedScrollingEnabled = false
         
-        // Tạo adapter mới với dữ liệu
-        val appAdapter = AppAdapter(section.apps, section.isHorizontal)
+        // Tạo adapter mới với dữ liệu (cần thiết vì mỗi section có dữ liệu khác nhau)
+        // Nếu là sponsored và horizontal, hiển thị đầy đủ thông tin
+        val showFullInfo = section.isSponsored && section.isHorizontal
+        val appAdapter = AppAdapter(section.apps, section.isHorizontal, showFullInfo)
         holder.recyclerViewApps.adapter = appAdapter
-        
-        // Đảm bảo RecyclerView con được đo lại
-        holder.recyclerViewApps.post {
-            holder.recyclerViewApps.requestLayout()
-            holder.itemView.requestLayout()
-        }
     }
 
     override fun getItemCount(): Int = sections.size
