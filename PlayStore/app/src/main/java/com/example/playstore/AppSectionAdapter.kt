@@ -52,8 +52,9 @@ class AppSectionAdapter(
         holder.recyclerViewApps.isNestedScrollingEnabled = false
         
         // Tạo adapter mới với dữ liệu (cần thiết vì mỗi section có dữ liệu khác nhau)
-        // Nếu là sponsored và horizontal, hiển thị đầy đủ thông tin
-        val showFullInfo = section.isSponsored && section.isHorizontal
+        // Nếu là horizontal và sponsored, hiển thị đầy đủ thông tin
+        // Vertical layout tự động hiển thị đầy đủ thông tin
+        val showFullInfo = section.isHorizontal && section.isSponsored
         val appAdapter = AppAdapter(section.apps, section.isHorizontal, showFullInfo)
         holder.recyclerViewApps.adapter = appAdapter
     }

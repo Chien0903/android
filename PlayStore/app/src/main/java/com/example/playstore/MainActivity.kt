@@ -23,11 +23,11 @@ class MainActivity : AppCompatActivity() {
     
     private fun createSampleData(): List<AppSection> {
         return listOf(
-            // Section "Suggested for you" (Sponsored) - Horizontal layout với đầy đủ thông tin
+            // Section "Suggested for you" (Sponsored) - Vertical layout với đầy đủ thông tin
             AppSection(
                 title = "Suggested for you",
                 isSponsored = true,
-                isHorizontal = true,
+                isHorizontal = false,
                 apps = listOf(
                     App(
                         name = "Mech Assemble: Zombie Swarm",
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                         size = "624 MB"
                     ),
                     App(
-                        name = "MU: Hồng Hoả Đao",
+                        name = "MU: Hong Hoa Dao",
                         genre = "Role Playing",
                         rating = 4.8f,
                         size = "339 MB"

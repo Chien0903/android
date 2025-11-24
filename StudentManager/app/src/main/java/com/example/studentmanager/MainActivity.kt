@@ -3,47 +3,47 @@ package com.example.studentmanager
 import android.content.Intent
 import android.os.Bundle
 import android.view.ContextMenu
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
-import android.widget.ArrayAdapter
+import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var listView: ListView
-    private val studentList = mutableListOf<Pair<String, String>>(
-        "Nguyen Van An" to "1",
-        "Tran Thi Binh" to "2",
-        "Le Van Cu" to "3",
-        "Pham Thi Dinh" to "4",
-        "Hoang Van Em" to "5",
-        "Dang Thi Hai" to "6",
-        "Vu Van Go" to "7",
-        "Nguyen Thi Ha" to "8",
-        "Tran Van In" to "9",
-        "Le Thi Anh" to "10",
-        "Pham Van Dong" to "11",
-        "Hoang Thi Linh" to "12",
-        "Dang Van Manh" to "13",
-        "Vu Thi Nap" to "14",
-        "Nguyen Van Om" to "15",
-        "Tran Thi Pinh" to "16",
-        "Le Van Quynh" to "17",
-        "Pham Thi Hai" to "18",
-        "Hoang Van Sinh" to "19",
-        "Dang Thi Tu" to "20"
-    )
+    private val studentList = mutableListOf<Pair<String, String>>()
     // Lưu danh sách (Họ tên, MSSV)
-    private lateinit var adapter: ArrayAdapter<String>
+    private lateinit var adapter: StudentAdapter
+
+    // ActivityResultLauncher để nhận kết quả từ AddStudentActivity
+    private val addStudentLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            val name = result.data?.getStringExtra("name") ?: return@registerForActivityResult
+            val mssv = result.data?.getStringExtra("mssv") ?: return@registerForActivityResult
+            val position = result.data?.getIntExtra("position", -1) ?: -1
+
+            if (position >= 0) {
+                // Chỉnh sửa student
+                studentList[position] = Pair(name, mssv)
+            } else {
+                // Thêm student mới
+                studentList.add(Pair(name, mssv))
+            }
+            adapter.notifyDataSetChanged()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +51,27 @@ class MainActivity : AppCompatActivity() {
 
         listView = findViewById(R.id.listViewStudents)
 
-        // Adapter hiển thị danh sách sinh viên
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentList.map { "${it.first} - ${it.second}" })
+        // Adapter hiển thị danh sách sinh viên với nút xóa và sửa
+        adapter = StudentAdapter(
+            studentList,
+            onEditClick = { position ->
+                // Xử lý sửa student
+                val intent = Intent(this, AddStudentActivity::class.java)
+                intent.putExtra("name", studentList[position].first)
+                intent.putExtra("mssv", studentList[position].second)
+                intent.putExtra("position", position)
+                addStudentLauncher.launch(intent)
+            },
+            onDeleteClick = { position ->
+                // Xử lý xóa student
+                studentList.removeAt(position)
+                adapter.notifyDataSetChanged()
+                Toast.makeText(this, "Đã xóa student", Toast.LENGTH_SHORT).show()
+            }
+        )
         listView.adapter = adapter
 
-        // Đăng ký context menu
+        // Đăng ký context menu (vẫn giữ để có thể edit)
         registerForContextMenu(listView)
     }
 
@@ -71,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_add -> {
                 // Mở Activity thêm sinh viên
                 val intent = Intent(this, AddStudentActivity::class.java)
-                startActivityForResult(intent, REQUEST_ADD)
+                addStudentLauncher.launch(intent)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -93,47 +109,52 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("name", studentList[info.position].first)
                 intent.putExtra("mssv", studentList[info.position].second)
                 intent.putExtra("position", info.position)
-                startActivityForResult(intent, REQUEST_EDIT)
+                addStudentLauncher.launch(intent)
             }
             R.id.action_remove -> {
-                // Xóa sinh viên
+                // Xóa sinh viên (cũng có thể dùng context menu)
                 studentList.removeAt(info.position)
-                updateList()
+                adapter.notifyDataSetChanged()
+                Toast.makeText(this, "Đã xóa student", Toast.LENGTH_SHORT).show()
             }
         }
         return super.onContextItemSelected(item)
     }
 
-    // Nhận kết quả từ Activity
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && data != null) {
-            val name = data.getStringExtra("name") ?: return
-            val mssv = data.getStringExtra("mssv") ?: return
+    // Custom Adapter để hiển thị student với nút xóa và sửa
+    private class StudentAdapter(
+        private val students: List<Pair<String, String>>,
+        private val onEditClick: (Int) -> Unit,
+        private val onDeleteClick: (Int) -> Unit
+    ) : BaseAdapter() {
 
-            when (requestCode) {
-                REQUEST_ADD -> {
-                    studentList.add(Pair(name, mssv))
-                }
-                REQUEST_EDIT -> {
-                    val position = data.getIntExtra("position", -1)
-                    if (position >= 0) {
-                        studentList[position] = Pair(name, mssv)
-                    }
-                }
+        override fun getCount(): Int = students.size
+
+        override fun getItem(position: Int): Pair<String, String> = students[position]
+
+        override fun getItemId(position: Int): Long = position.toLong()
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            val view = convertView ?: LayoutInflater.from(parent?.context)
+                .inflate(R.layout.item_student, parent, false)
+
+            val student = students[position]
+            val textView = view.findViewById<TextView>(R.id.textViewStudent)
+            val buttonEdit = view.findViewById<Button>(R.id.buttonEdit)
+            val buttonDelete = view.findViewById<Button>(R.id.buttonDelete)
+
+            textView.text = "${student.first} - ${student.second}"
+
+            buttonEdit.setOnClickListener {
+                onEditClick(position)
             }
-            updateList()
+
+            buttonDelete.setOnClickListener {
+                onDeleteClick(position)
+            }
+
+            return view
         }
     }
-
-    private fun updateList() {
-        adapter.clear()
-        adapter.addAll(studentList.map { "${it.first} - ${it.second}" })
-        adapter.notifyDataSetChanged()
-    }
-
-    companion object {
-        const val REQUEST_ADD = 1
-        const val REQUEST_EDIT = 2
-    }
 }
+result.data
