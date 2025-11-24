@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+	<com.google.android.material.appbar.MaterialToolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="56dp"
+		android:background="#E53935"
+		android:title="@string/inbox"
+		app:title="@string/inbox"
+		tools:title="@string/inbox"
+		android:titleTextColor="@android:color/white"
+		app:titleTextColor="@android:color/white"
+		app:navigationIcon="@drawable/ic_menu_24"
+		app:menu="@menu/menu_main"
+		app:layout_scrollFlags="scroll|enterAlways"/>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:layout_marginTop="56dp">
+
+		<!-- Tip header -->
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:padding="12dp"
+			android:background="#EEEEEE">
+
+			<FrameLayout
+				android:layout_width="36dp"
+				android:layout_height="36dp"
+				android:layout_gravity="center_vertical"
+				android:background="@drawable/bg_tip_circle"
+				android:layout_marginEnd="8dp">
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:padding="6dp"
+					android:src="@drawable/ic_check_24"
+					app:tint="#9E9E9E"/>
+			</FrameLayout>
+
+			<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:orientation="vertical">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Touch a sender image to select"
+					android:textStyle="bold"
+					android:textSize="16sp"
+					android:textColor="#424242"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="that conversation."
+					android:textSize="16sp"
+					android:textColor="#616161"/>
+			</LinearLayout>
+
+			<ImageView
+				android:layout_width="24dp"
+				android:layout_height="24dp"
+				android:src="@drawable/ic_close_24"
+				app:tint="#9E9E9E"
+				android:layout_gravity="center_vertical"/>
+		</LinearLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:background="@color/gmail_divider"/>
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			android:paddingTop="4dp"
+			android:clipToPadding="false"
+			tools:listitem="@layout/item_gmail"
+			tools:itemCount="6"/>
+	</LinearLayout>
+
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id="@+id/fabCompose"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom|end"
+		android:layout_margin="16dp"
+		app:srcCompat="@drawable/ic_edit_24"
+		app:tint="@android:color/white"
+		app:backgroundTint="@color/gmail_red"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
