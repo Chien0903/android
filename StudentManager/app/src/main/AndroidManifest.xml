@@ -13,10 +13,10 @@
         android:theme="@style/Theme.StudentManager"
         tools:targetApi="31">
         <activity
-            android:name=".SecondActivity"
+            android:name=".AddStudentActivity"
             android:exported="false" />
         <activity
-            android:name=".AddStudentActivity"
+            android:name=".DetailActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

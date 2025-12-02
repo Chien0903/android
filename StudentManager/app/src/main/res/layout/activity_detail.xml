@@ -38,8 +38,9 @@
         android:inputType="textPostalAddress" />
 
     <Button
-        android:id="@+id/buttonSave"
+        android:id="@+id/buttonUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lưu" />
+        android:text="Cập nhật" />
 </LinearLayout>
+
