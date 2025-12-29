@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "FileManagement"
 include(":app")
+include(":app")
  
